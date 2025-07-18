@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>test</title>
+</head>
+<body>
+    <h1>hi</h1>
+    <form id="userForm">
+        <input type="text" id="username" placeholder="Username" required />
+        <input type="email" id="email" placeholder="Email" required />
+        <button type="submit">Submit</button>
+    </form>
+    <p id="errorMsg"></p>
+
+    <script>
+        document.getElementById("userForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+
+            try {
+                const response = await fetch("http://localhost:8080/api/users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, email })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    document.getElementById("errorMsg").textContent = errorData.error;
+                } else {
+                    document.getElementById("errorMsg").textContent = "User created successfully!";
+                }
+            } catch (err) {
+                document.getElementById("errorMsg").textContent = "Something went wrong.";
+            }
+        });
+    </script>
+</body>
+</html>
